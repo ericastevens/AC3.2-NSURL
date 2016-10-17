@@ -12,6 +12,9 @@ struct InstaCat {
     let name: String
     let id: Int
     let instagramURL: URL
+    var description: String {
+        return "Nice to meet you, I'm \(name)"
+    }
 }
 
 class InstaCatTableViewController: UITableViewController {
@@ -51,12 +54,12 @@ class InstaCatTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "InstaCatCellIdentifier", for: indexPath)
         cell.textLabel?.text = instaCats[indexPath.row].name
-        cell.detailTextLabel?.text = "Cat ID: \(instaCats[indexPath.row].id)"
+        cell.detailTextLabel?.text = instaCats[indexPath.row].description
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        UIApplication.shared.openURL(URL(string: String(describing: instaCats[indexPath.row].instagramURL))!)
+        UIApplication.shared.open(instaCats[indexPath.row].instagramURL)
     }
     
     // MARK: Data
@@ -99,7 +102,11 @@ class InstaCatTableViewController: UITableViewController {
                 if let cats = catData["cats"] {
                     for i in 0..<cats.count {
                         // 3. Check for keys "name", "cat_id", "instagram", making sure to cast values as needed along the way
-                        if let name = cats[i]["name"] as? String, let id = cats[i]["cat_id"] as? String, let instagramURL = cats[i]["instagram"] as? String {
+                        if let name = cats[i]["name"] as? String, let id = cats[i]["cat_id"] as? String, let instagramURL = cats[i]["instagram"] as? String
+                        //Still inside of if let binding
+                        //Up until this point, all we have done was dive into the data to pull out the values needed.
+                        //In the next few lines, the values are converted to the types expected by the struct
+                        {
                             let instaCat = InstaCat(name: name, id: Int(id)!, instagramURL: URL(string: instagramURL)!)
                             instaCats.append(instaCat)
                         }
